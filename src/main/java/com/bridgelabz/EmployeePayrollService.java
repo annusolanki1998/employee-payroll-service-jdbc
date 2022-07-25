@@ -17,10 +17,15 @@ public class EmployeePayrollService {
             connection = DriverManager.getConnection(jdbcUrl, userName, password);
             System.out.println("Connection done...");
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM employee_payroll WHERE start BETWEEN '2018-01-03' AND NOW() ");
+            ResultSet resultSet = statement.executeQuery("SELECT SUM(basic_pay), AVG(basic_pay), MAX(basic_pay), MIN(basic_pay) FROM employee_payroll WHERE gender = 'F' GROUP BY gender ");
+            Statement statement1 = connection.createStatement();
+            ResultSet resultSet1 = statement1.executeQuery("SELECT  COUNT(gender) from employee_payroll WHERE gender = 'F' GROUP BY gender");
 
             while (resultSet.next()) {
-                System.out.println(resultSet.getInt("id") + "  " + resultSet.getString("name") + "  " + resultSet.getString("phoneNumber") + "  " + resultSet.getString("address") + "  " + resultSet.getString("department") + "  " + resultSet.getString("gender") + "  " + resultSet.getDouble("basic_pay") + "  " + resultSet.getDouble("deduction") + "  " + resultSet.getDouble("taxable_pay") + "  " + resultSet.getDouble("net_pay") + "  " + resultSet.getDouble("income_tax") + "  " + resultSet.getDate("start"));
+                System.out.println("Sum of all basic salary are: " + resultSet.getDouble("SUM(basic_pay)") + "\n" + "Average of all basic salary is: " + resultSet.getDouble("AVG(basic_pay)") + "\n" + "Minimum in between basic salary is: " + resultSet.getDouble("MIN(basic_pay)") + "\n" + "Maximum in between basic salary is: " + resultSet.getDouble("MAX(basic_pay)"));
+            }
+            while (resultSet1.next()) {
+                System.out.println("NO of female are: " + resultSet1.getInt("COUNT(gender)"));
             }
         } catch (Exception e) {
             e.printStackTrace();
