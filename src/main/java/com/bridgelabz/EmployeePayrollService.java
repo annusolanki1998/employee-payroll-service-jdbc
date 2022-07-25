@@ -9,6 +9,9 @@ public class EmployeePayrollService {
         String jdbcUrl = "jdbc:mysql://localhost:3306/payroll_service";
         String userName = "root";
         String password = "12345";
+
+        double basic_pay = 600000.00;
+        int id = 1;
         Connection connection = null;
 
         try {
@@ -16,8 +19,15 @@ public class EmployeePayrollService {
             System.out.println("Driver loaded");
             connection = DriverManager.getConnection(jdbcUrl, userName, password);
             System.out.println("Connection done...");
+
+            String query = "UPDATE employee_payroll SET basic_pay=? WHERE id=?";
+            PreparedStatement preparestatement = connection.prepareStatement(query);
+
+            preparestatement.setDouble(1, basic_pay);
+            preparestatement.setInt(2, id);
+            preparestatement.executeUpdate();
+
             Statement statement = connection.createStatement();
-            statement.execute("UPDATE employee_payroll SET basic_pay=5000000.00 WHERE id=1");
             ResultSet resultSet = statement.executeQuery("SELECT * FROM employee_payroll");
             while (resultSet.next()) {
                 System.out.println(resultSet.getInt("id") + "  " + resultSet.getString("name") + "  " + resultSet.getString("phoneNumber") + "  " + resultSet.getString("address") + "  " + resultSet.getString("department") + "  " + resultSet.getString("gender") + "  " + resultSet.getDouble("basic_pay") + "  " + resultSet.getDouble("deduction") + "  " + resultSet.getDouble("taxable_pay") + "  " + resultSet.getDouble("net_pay") + "  " + resultSet.getDouble("income_tax") + "  " + resultSet.getDate("start"));
